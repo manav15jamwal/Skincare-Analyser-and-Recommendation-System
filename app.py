@@ -161,30 +161,50 @@ def fetch_og_image(url):
 
 PRODUCT_DB = {
     'Acne': [
-        { 'title': 'COSRX Salicylic Acid Daily Gentle Cleanser', 'url': 'https://www.amazon.in/Cosrx-Salicylic-Cleanser-milliliter-Skincare/dp/B0C5JS1LQM' },
-        { 'title': 'Benzac AC 2.5% Gel (Benzoyl Peroxide)', 'url': 'https://www.amazon.in/s?k=benzoyl+peroxide+gel' },
-        { 'title': 'La Roche-Posay Effaclar Duo+', 'url': 'https://www.amazon.in/s?k=La+Roche-Posay+Effaclar+Duo' }
+        { 'title': 'COSRX Salicylic Acid Daily Gentle Cleanser', 'url': 'https://www.amazon.in/Cosrx-Salicylic-Cleanser-milliliter-Skincare/dp/B0C5JS1LQM','static_img': 'Assets\Cosr x _Acne.png' },
+        { 'title': 'Benzac AC 2.5% Gel (Benzoyl Peroxide)', 'url': 'https://www.amazon.in/s?k=benzoyl+peroxide+gel','static_img':'Assets\benzac acne.png' },
+        { 'title': 'La Roche-Posay Effaclar Duo+', 'url': 'https://www.amazon.in/s?k=La+Roche-Posay+Effaclar+Duo','static_img':'Assets\la rche acne.png' }
     ],
     'Normal': [
-        { 'title': 'Cetaphil Gentle Skin Cleanser', 'url': 'https://www.amazon.in/Cetaphil-Sulphate-Free-Hydrating-Niacinamide-Sensitive/dp/B01CCGW4OE' },
-        { 'title': 'CeraVe Moisturizing Lotion', 'url': 'https://www.amazon.in/33599-CeraVe-Moisturising-Lotion-236ml/dp/B07CG2TD9F' },
-        { 'title': 'La Roche-Posay Anthelios SPF50+', 'url': 'https://www.amazon.in/Roche-Posay-Anthelios-UVMune-Invisible-Resistant/dp/B09SLF5ZH8' }
+        { 'title': 'Cetaphil Gentle Skin Cleanser', 'url': 'https://www.amazon.in/Cetaphil-Sulphate-Free-Hydrating-Niacinamide-Sensitive/dp/B01CCGW4OE','static_img':'Assets\Cetaphil_facewaah_Normal.png' },
+        { 'title': 'CeraVe Moisturizing Lotion', 'url': 'https://www.amazon.in/33599-CeraVe-Moisturising-Lotion-236ml/dp/B07CG2TD9F','static_img':'Assets\Cera Ve lotion normal.png' },
+        { 'title': 'La Roche-Posay Anthelios SPF50+', 'url': 'https://www.amazon.in/Roche-Posay-Anthelios-UVMune-Invisible-Resistant/dp/B09SLF5ZH8','static_img':'Assets\La Roche normal.png' }
     ]
 }
 
+def show_product_image(container, remote_img, fallback_img, width=120):
+    """
+    Safely display product image:
+    1. Try remote URL
+    2. Fallback to local static image
+    3. Never crash Streamlit
+    """
+    try:
+        if isinstance(remote_img, str) and remote_img.startswith("http"):
+            container.image(remote_img, width=width)
+        else:
+            container.image(fallback_img, width=width)
+    except Exception:
+        container.image(fallback_img, width=width)
 
 def get_recs_with_images(key):
     out = []
     for p in PRODUCT_DB.get(key, []):
-        img = fetch_og_image(p['url'])
-        out.append({'title': p['title'], 'url': p['url'], 'img': img})
+        img = fetch_og_image(p['url'])  # may fail
+        out.append({
+            'title': p['title'],
+            'url': p['url'],
+            'img': img,
+            'static_img': p['static_img']
+        })
     return out
+
 
 # ---------------------- Streamlit UI ----------------------
 
-st.title("SkinCare Recommendation System")
+st.title("AI Skin Analyser")
 st.markdown(
-    "Upload or capture a photo. "
+    "Upload or capture a photo of yours to deeply analyse the health of your skin. "
 )
 
 with st.sidebar:
@@ -211,7 +231,7 @@ if 'model' not in st.session_state:
     if os.path.exists(DEFAULT_MODEL_PATH) and tf is not None:
         st.session_state.model = load_keras_model(DEFAULT_MODEL_PATH)
         if st.session_state.model is not None:
-            st.success(f"Loaded model from {DEFAULT_MODEL_PATH}")
+            st.success(f"Model loaded successfuly.Lets Go")
         else:
             st.warning(f"Found file at {DEFAULT_MODEL_PATH} but failed to load as Keras model.")
     else:
@@ -224,7 +244,7 @@ with col1:
     uploaded_file = st.file_uploader("Or upload an image", type=["jpg", "jpeg", "png"])
 
 with col2:
-    st.info("Tips: face should be well-lit and not heavily filtered.")
+    st.info("Tips: face should be well-lit and not heavily filtered.\nResult may disrupt if image is not clear enough.")
 
 image = None
 if camera_img is not None:
@@ -284,7 +304,10 @@ if image is not None:
         if any_acne:
             st.markdown(
                 """
-                ### Tips for acne-prone skin
+                #### You definitely got a wonderful skin , Dont worry about the acne.
+                Follow these steps and welcome your transformation.
+
+                ## Tips for your skin
                 - Use oil-free, non-comedogenic products.
                 - Cleanse twice daily with a gentle salicylic acid cleanser.
                 - Avoid picking or popping pimples.
@@ -292,18 +315,23 @@ if image is not None:
                 - Change pillow covers every 2–3 days.
                 - Apply broad-spectrum SPF 30+ sunscreen every morning.
                 - If severe or persistent, consult a dermatologist.
+                
+                
                 """
             )
         else:
             st.markdown(
                 """
-                ### Tips for normal/healthy skin
+                #### Wow! That's one of the most healty skins I have ever seen.To enhance and maintain your natural Aura follow these tips.
+                
+                ## Tips for normal/healthy skin
                 - Keep a simple routine: cleanser → moisturizer → sunscreen.
                 - Do not overwash; twice a day is sufficient.
                 - Use a lightweight, hydrating moisturizer.
                 - Apply sunscreen daily (SPF 30+).
                 - Avoid harsh scrubs unless needed.
                 - Maintain a balanced diet and hydration.
+                
                 """
             )
 
@@ -316,22 +344,19 @@ if image is not None:
 
         for prod in recs:
             cols = st.columns([1, 3])
-            if prod['img']:
-                try:
-                    cols[0].image(prod['img'], width=120)
-                except Exception:
-                    cols[0].write("Image unavailable")
-            else:
-                cols[0].write("No image")
+
+            show_product_image(
+                container=cols[0],
+                remote_img=prod.get('img'),
+                fallback_img=prod.get('static_img'),
+                width=120
+                )
 
             cols[1].markdown(f"**[{prod['title']}]({prod['url']})**")
             cols[1].markdown(f"[Buy on Amazon]({prod['url']})")
 
-        if st.button("Save annotated image"):
-            save_path = "annotated_result.jpg"
-            annotated_pil.convert('RGB').save(save_path)
-            st.success(f"Saved annotated image to {save_path}")
+
 
 else:
     st.warning("No image — upload or take a selfie.")
-st.caption("Disclaimer: for experimentation only. Not medical advice.")
+st.caption("Disclaimer: for experimentation only. Not medical advice.\nWill be enhaced in future updates.")
