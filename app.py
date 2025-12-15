@@ -11,7 +11,7 @@ import requests
 
 
 
-DEFAULT_MODEL_PATH = r"C:\Users\manav\OneDrive\Desktop\Project\acne_detection.keras"
+DEFAULT_MODEL_PATH = "acne_detection.keras"
 INPUT_SIZE = (64, 64)  # fixed, do not expose to user
 
 st.set_page_config(page_title="SkinCare AI — Face detector & recommender", layout="centered")
