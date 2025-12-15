@@ -17,6 +17,62 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS_DIR = os.path.join(BASE_DIR, "assets")
 
 st.set_page_config(page_title="SkinCare AI — Face detector & recommender", layout="centered")
+st.markdown(
+    """
+    <style>
+    /* ===== Main app background ===== */
+    .stApp {
+        background-color: #000000;
+    }
+
+    /* ===== Headings (match sidebar color) ===== */
+    h1, h2, h3 {
+        color: #87CEEB !important;   /* same as sidebar gradient */
+        font-weight: 700;
+    }
+
+    /* ===== Normal text ===== */
+    p, span, label, div {
+        color: #e0e0e0;
+    }
+
+    /* ===== Buttons ===== */
+    .stButton > button {
+        background-color: #111111;
+        color: #87CEEB;
+        border: 1px solid #87CEEB;
+        border-radius: 8px;
+    }
+
+    .stButton > button:hover {
+        background-color: #1a1a1a;
+    }
+
+    /* ===== File uploader / camera ===== */
+    section[data-testid="stFileUploader"],
+    section[data-testid="stCameraInput"] {
+        background-color: #111111;
+        border: 1px solid #333333;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    /* ===== Info / warning boxes ===== */
+    .stAlert {
+        background-color: #111111;
+        border: 1px solid #333333;
+        color: #e0e0e0;
+    }
+
+    /* ===== Horizontal divider ===== */
+    hr {
+        border: 1px solid #333333;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 
 
 def load_keras_model(path=DEFAULT_MODEL_PATH):
@@ -219,7 +275,8 @@ with st.sidebar:
     st.markdown("""
     <style>
         [data-testid="stSidebar"] {
-            background: linear-gradient(#87CEEB, #B0E0E6);
+            background: linear-gradient(180deg, #020024, #090979, #00d4ff);
+            color : white;
             width: 145px !important;
             
         }
@@ -228,8 +285,7 @@ with st.sidebar:
 
     st.sidebar.markdown(r"""
     <div style='text-align: left;'>
-        <h1 style = "color:black;">Welcome!! </h1>
-        <h4 style = "color:black;">Listen to your SKINN...</h4>
+        <h1 style = "color:black;">Heyy!! Adorable</h1>
     </div>""",unsafe_allow_html=True)
 
 
@@ -313,7 +369,7 @@ if image is not None:
             st.markdown(
                 """
                 #### You definitely got a wonderful skin , Dont worry about the acne.
-                Follow these steps and welcome your transformation.
+                Let's start your transformation.
 
                 ## Tips for your skin
                 - Use oil-free, non-comedogenic products.
@@ -330,8 +386,8 @@ if image is not None:
         else:
             st.markdown(
                 """
-                #### Wow! That's one of the most healty skins I have ever seen.To enhance and maintain your natural Aura follow these tips.
-                
+                #### Wow! That's one of the most healty skins I have ever seen.
+
                 ## Tips for normal/healthy skin
                 - Keep a simple routine: cleanser → moisturizer → sunscreen.
                 - Do not overwash; twice a day is sufficient.
