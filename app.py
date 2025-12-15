@@ -14,7 +14,7 @@ import requests
 DEFAULT_MODEL_PATH = "acne_detection.keras"
 INPUT_SIZE = (64, 64)  # fixed, do not expose to user
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ASSETS_DIR = os.path.join(BASE_DIR, "assets")
+ASSETS_DIR = os.path.join(BASE_DIR, "Assets")
 
 st.set_page_config(page_title="SkinCare AI — Face detector & recommender", layout="centered")
 st.markdown(
