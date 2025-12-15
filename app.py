@@ -163,7 +163,7 @@ def fetch_og_image(url):
 
 PRODUCT_DB = {
     'Acne': [
-        { 'title': 'COSRX Salicylic Acid Daily Gentle Cleanser', 'url': 'https://www.amazon.in/Cosrx-Salicylic-Cleanser-milliliter-Skincare/dp/B0C5JS1LQM','static_img': os.path.join(ASSETS_DIR, 'Cosr_x _Acne.png') },
+        { 'title': 'COSRX Salicylic Acid Daily Gentle Cleanser', 'url': 'https://www.amazon.in/Cosrx-Salicylic-Cleanser-milliliter-Skincare/dp/B0C5JS1LQM','static_img': os.path.join(ASSETS_DIR, 'Cosr_x_Acne.png') },
         { 'title': 'Benzac AC 2.5% Gel (Benzoyl Peroxide)', 'url': 'https://www.amazon.in/s?k=benzoyl+peroxide+gel','static_img': os.path.join(ASSETS_DIR, 'benzac_acne.png') },
         { 'title': 'La Roche-Posay Effaclar Duo+', 'url': 'https://www.amazon.in/s?k=La+Roche-Posay+Effaclar+Duo','static_img':os.path.join(ASSETS_DIR, 'la_rche_acne.png') }
     ],
