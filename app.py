@@ -13,6 +13,8 @@ import requests
 
 DEFAULT_MODEL_PATH = "acne_detection.keras"
 INPUT_SIZE = (64, 64)  # fixed, do not expose to user
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ASSETS_DIR = os.path.join(BASE_DIR, "assets")
 
 st.set_page_config(page_title="SkinCare AI — Face detector & recommender", layout="centered")
 
@@ -161,31 +163,37 @@ def fetch_og_image(url):
 
 PRODUCT_DB = {
     'Acne': [
-        { 'title': 'COSRX Salicylic Acid Daily Gentle Cleanser', 'url': 'https://www.amazon.in/Cosrx-Salicylic-Cleanser-milliliter-Skincare/dp/B0C5JS1LQM','static_img': 'Assets\Cosr x _Acne.png' },
-        { 'title': 'Benzac AC 2.5% Gel (Benzoyl Peroxide)', 'url': 'https://www.amazon.in/s?k=benzoyl+peroxide+gel','static_img':'Assets\benzac acne.png' },
-        { 'title': 'La Roche-Posay Effaclar Duo+', 'url': 'https://www.amazon.in/s?k=La+Roche-Posay+Effaclar+Duo','static_img':'Assets\la rche acne.png' }
+        { 'title': 'COSRX Salicylic Acid Daily Gentle Cleanser', 'url': 'https://www.amazon.in/Cosrx-Salicylic-Cleanser-milliliter-Skincare/dp/B0C5JS1LQM','static_img': os.path.join(ASSETS_DIR, 'Cosr_x _Acne.png') },
+        { 'title': 'Benzac AC 2.5% Gel (Benzoyl Peroxide)', 'url': 'https://www.amazon.in/s?k=benzoyl+peroxide+gel','static_img': os.path.join(ASSETS_DIR, 'benzac_acne.png') },
+        { 'title': 'La Roche-Posay Effaclar Duo+', 'url': 'https://www.amazon.in/s?k=La+Roche-Posay+Effaclar+Duo','static_img':os.path.join(ASSETS_DIR, 'la_rche_acne.png') }
     ],
     'Normal': [
-        { 'title': 'Cetaphil Gentle Skin Cleanser', 'url': 'https://www.amazon.in/Cetaphil-Sulphate-Free-Hydrating-Niacinamide-Sensitive/dp/B01CCGW4OE','static_img':'Assets\Cetaphil_facewaah_Normal.png' },
-        { 'title': 'CeraVe Moisturizing Lotion', 'url': 'https://www.amazon.in/33599-CeraVe-Moisturising-Lotion-236ml/dp/B07CG2TD9F','static_img':'Assets\Cera Ve lotion normal.png' },
-        { 'title': 'La Roche-Posay Anthelios SPF50+', 'url': 'https://www.amazon.in/Roche-Posay-Anthelios-UVMune-Invisible-Resistant/dp/B09SLF5ZH8','static_img':'Assets\La Roche normal.png' }
+        { 'title': 'Cetaphil Gentle Skin Cleanser', 'url': 'https://www.amazon.in/Cetaphil-Sulphate-Free-Hydrating-Niacinamide-Sensitive/dp/B01CCGW4OE','static_img':os.path.join(ASSETS_DIR, 'Cetaphil_facewaah_Normal.png') },
+        { 'title': 'CeraVe Moisturizing Lotion', 'url': 'https://www.amazon.in/33599-CeraVe-Moisturising-Lotion-236ml/dp/B07CG2TD9F','static_img':os.path.join(ASSETS_DIR, 'Cera_Ve_lotion_normal.png') },
+        { 'title': 'La Roche-Posay Anthelios SPF50+', 'url': 'https://www.amazon.in/Roche-Posay-Anthelios-UVMune-Invisible-Resistant/dp/B09SLF5ZH8','static_img':os.path.join(ASSETS_DIR, 'La_Roche_normal.png') }
     ]
 }
 
 def show_product_image(container, remote_img, fallback_img, width=120):
-    """
-    Safely display product image:
-    1. Try remote URL
-    2. Fallback to local static image
-    3. Never crash Streamlit
-    """
-    try:
-        if isinstance(remote_img, str) and remote_img.startswith("http"):
+    # Try remote image
+    if isinstance(remote_img, str) and remote_img.startswith("http"):
+        try:
             container.image(remote_img, width=width)
-        else:
-            container.image(fallback_img, width=width)
-    except Exception:
-        container.image(fallback_img, width=width)
+            return
+        except Exception:
+            pass
+
+    # Fallback to local static image
+    if isinstance(fallback_img, str) and os.path.exists(fallback_img):
+        try:
+            img = Image.open(fallback_img)
+            container.image(img, width=width)
+            return
+        except Exception:
+            pass
+
+    container.write("Image unavailable")
+
 
 def get_recs_with_images(key):
     out = []
