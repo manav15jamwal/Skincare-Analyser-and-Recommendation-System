@@ -268,7 +268,7 @@ def get_recs_with_images(key):
 
 st.title("AI Skin Analyser")
 st.markdown(
-    "Upload or capture a photo of yours to deeply analyse the health of your skin. "
+    "Capture your photo to know about your skin. "
 )
 
 with st.sidebar:
@@ -308,7 +308,7 @@ with col1:
     uploaded_file = st.file_uploader("Or upload an image", type=["jpg", "jpeg", "png"])
 
 with col2:
-    st.info("Tips: face should be well-lit and not heavily filtered.\nResult may disrupt if image is not clear enough.")
+    st.info("Tips: face should be well-lit and not heavily filtered.\nQuality variance can disrupt the result.")
 
 image = None
 if camera_img is not None:
@@ -386,7 +386,7 @@ if image is not None:
         else:
             st.markdown(
                 """
-                #### Wow! That's one of the most healty skins I have ever seen.
+                #### Wow! That's one of the most healthy skins I have ever seen.
 
                 ## Tips for normal/healthy skin
                 - Keep a simple routine: cleanser → moisturizer → sunscreen.
