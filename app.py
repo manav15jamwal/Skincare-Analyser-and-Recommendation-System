@@ -404,7 +404,7 @@ if image is not None:
         st.header("Product recommendations")
         label_key = 'Acne' if any_acne else 'Normal'
         recs = get_recs_with_images(label_key)
-        st.write("Click product title or image to open the Amazon page.")
+        st.write("Click on product title to buy.")
 
         for prod in recs:
             cols = st.columns([1, 3])
